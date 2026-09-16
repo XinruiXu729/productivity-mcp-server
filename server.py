@@ -2,17 +2,20 @@ import os
 import sys
 import sqlite3
 import smtplib
+from pathlib import Path
 from email.mime.text import MIMEText
 
 from dotenv import load_dotenv
 from mcp.server import MCPServer
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+
+load_dotenv(BASE_DIR / ".env")
 
 GMAIL_ADDRESS = os.getenv("GMAIL_ADDRESS")
 GMAIL_APP_PASSWORD = os.getenv("GMAIL_APP_PASSWORD")
 
-DB_PATH = "tasks.db"
+DB_PATH = str(BASE_DIR / "tasks.db")
 
 mcp = MCPServer("Productivity Assistant")
 
@@ -84,6 +87,19 @@ def add_task(title: str, due_date: str = "") -> str:
         )
     return f"Task added with id {cursor.lastrowid}: {title}"
 
+@mcp.tool()
+def delete_task(task_id: int) -> str:
+    """Delete a task from the user's task list by its id.
+
+    Args:
+        task_id: the numeric id of the task to delete (use list_tasks to find it)
+    """
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    if cursor.rowcount == 0:
+        return f"No task found with id {task_id}."
+    return f"Task {task_id} deleted."
+    
 @mcp.prompt()
 def plan_my_day(recipient_email: str) -> str:
     """Generate a daily summary email of all current tasks."""
