@@ -111,6 +111,16 @@ productivity-mcp-server/
 ├── claude_desktop_config.example.json # Example MCP config for Claude Desktop
 └── README.md
 
+## Code Citations
+
+This project's core structure and several implementation patterns were adapted from official documentation:
+
+- **MCP Python SDK** ([github.com/modelcontextprotocol/python-sdk](https://github.com/modelcontextprotocol/python-sdk)) — the `@mcp.tool()` / `@mcp.prompt()` decorator pattern, the `MCPServer` class, and `mcp.run()` were used following the SDK's own examples and migration notes (v2.x renamed `FastMCP` to `MCPServer`).
+- **Python `smtplib` docs** ([docs.python.org/3/library/smtplib.html](https://docs.python.org/3/library/smtplib.html)) — the `SMTP_SSL` connection pattern and `MIMEText` message construction used in `send_email`.
+- **Python `sqlite3` docs** ([docs.python.org/3/library/sqlite3.html](https://docs.python.org/3/library/sqlite3.html)) — the parameterized query (`?` placeholder) pattern used in `add_task`, `list_tasks`, and `delete_task`, and the `sqlite3.Row` row factory used to convert query results into dictionaries.
+- **`python-dotenv` docs** ([pypi.org/project/python-dotenv](https://pypi.org/project/python-dotenv/)) — the `load_dotenv()` pattern used to load credentials from `.env`.
+
+All business logic (task/email tool design, the `plan_my_day` prompt content, database schema, and both security best-practice implementations) is original to this project.
 
 ## Author
 
