@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "productivity-assistant": {
+      "command": "/absolute/path/to/productivity-mcp-server/.venv/bin/python",
+      "args": ["/absolute/path/to/productivity-mcp-server/server.py"]
+    }
+  }
+}
